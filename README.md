@@ -31,8 +31,8 @@
 +-------------------------------------------------------+
 |                 Hardware / FreeRTOS                   |
 +-------------------------------------------------------+
-
-🧩 Módulos del Kernel
+``` 
+## 🧩 Módulos del Kernel
 
     KryptHAL (Hardware Abstraction Layer): Control de bajo nivel del hardware, lecturas del chip (frecuencia, cores, RAM libre), reinicios del sistema y gestión persistente mediante NVS (Non-Volatile Storage).
 
@@ -42,7 +42,7 @@
 
     KryptNet (Network Engine): Pila de red WiFi y motor HTTP para peticiones salientes.
 
-📁 Estructura del Repositorio
+## 📁 Estructura del Repositorio
 Plaintext
 
 KryptKernel/
@@ -56,9 +56,9 @@ KryptKernel/
 ├── library.properties# Manifest para Arduino IDE
 └── README.md
 
-💻 Ejemplo de Uso (Integration API)
+## 💻 Ejemplo de Uso (Integration API)
 C++
-
+```bash
 #include <Arduino.h>
 #include <Krypt.h>
 
@@ -83,45 +83,9 @@ void setup() {
 void loop() {
   // El Kernel administra las tareas en background
 }
-
-📜 Licencia
+``` 
+## 📜 Licencia
 
 Este proyecto se distribuye bajo la licencia MIT.
 
 
----
-
-### Manifests de integración como librería
-
-Para que cualquier proyecto o distro pueda importar tu Kernel fácilmente, añade estos dos archivos en la raíz del repositorio de **KryptKernel**:
-
-#### 1. `library.properties` (para Arduino IDE)
-```ini
-name=KryptKernel
-version=1.0.0
-author=Diego
-maintainer=Diego
-sentence=Lightweight OS Kernel for ESP32
-paragraph=A modular monolithic kernel built on top of FreeRTOS and LittleFS.
-category=System
-url=https://github.com/TU_USUARIO/KryptKernel
-architectures=esp32
-includes=Krypt.h
-
-2. library.json (para PlatformIO)
-JSON
-
-{
-  "name": "KryptKernel",
-  "version": "1.0.0",
-  "description": "Lightweight OS Kernel for ESP32 built on FreeRTOS and LittleFS",
-  "keywords": "kernel, esp32, os, freertos, littlefs",
-  "authors": [
-    {
-      "name": "Diego"
-    }
-  ],
-  "license": "MIT",
-  "frameworks": "arduino",
-  "platforms": "espressif32"
-}
