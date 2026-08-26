@@ -1,0 +1,14 @@
+{
+  "name": "KryptKernel",
+  "version": "1.0.0",
+  "description": "Lightweight OS Kernel for ESP32 built on FreeRTOS and LittleFS",
+  "keywords": "kernel, esp32, os, freertos, littlefs",
+  "authors": [
+    {
+      "name": "Diego"
+    }
+  ],
+  "license": "MIT",
+  "frameworks": "arduino",
+  "platforms": "espressif32"
+}
