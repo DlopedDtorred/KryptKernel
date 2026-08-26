@@ -43,7 +43,7 @@
     KryptNet (Network Engine): Pila de red WiFi y motor HTTP para peticiones salientes.
 
 ## 📁 Estructura del Repositorio
-Plaintext
+```Plaintext
 
 KryptKernel/
 ├── Krypt.h           # Interfaz pública unificada del Kernel
@@ -55,7 +55,7 @@ KryptKernel/
 ├── library.json      # Manifest para PlatformIO
 ├── library.properties# Manifest para Arduino IDE
 └── README.md
-
+``` 
 ## 💻 Ejemplo de Uso (Integration API)
 C++
 ```bash
