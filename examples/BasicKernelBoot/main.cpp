@@ -28,11 +28,11 @@ void setup() {
 
     // Crear Tareas Multinúcleo
     Krypton::SystemKernel.getScheduler().createTask(
-        userTaskCore0, "WorkerCore0", 2048, NULL, Krypton::TaskPriority::NORMAL, 0
+        userTaskCore0, "WorkerCore0", 2048, nullptr, Krypton::TaskPriority::NORMAL, 0
     );
 
     Krypton::SystemKernel.getScheduler().createTask(
-        userTaskCore1, "WorkerCore1", 2048, NULL, Krypton::TaskPriority::NORMAL, 1
+        userTaskCore1, "WorkerCore1", 2048, nullptr, Krypton::TaskPriority::NORMAL, 1
     );
 
     // Imprimir Reporte de Diagnóstico

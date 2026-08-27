@@ -9,6 +9,8 @@ namespace Krypton {
     Kernel::~Kernel() {}
 
     bool Kernel::boot() {
+        if (bootCompleted) return true;
+
         Serial.begin(115200);
         delay(300);
 
@@ -49,9 +51,9 @@ namespace Krypton {
         Serial.printf(" Kernel Version: %s\n", KRYPT_KERNEL_VERSION);
         Serial.printf(" Uptime: %lu ms\n", millis() - bootTimestamp);
         Serial.printf(" CPU Frequency: %u MHz\n", ESP.getCpuFreqMHz());
-        Serial.printf(" Free Heap: %u bytes\n", memoryManager.getMemorySnapshot().freeHeap);
+        Serial.printf(" Free Heap: %zu bytes\n", memoryManager.getMemorySnapshot().freeHeap);
         if (vfs.isMounted()) {
-            Serial.printf(" VFS Used: %u / %u bytes\n", vfs.getUsedBytes(), vfs.getTotalBytes());
+            Serial.printf(" VFS Used: %zu / %zu bytes\n", vfs.getUsedBytes(), vfs.getTotalBytes());
         }
         Serial.println("=================================================\n");
     }

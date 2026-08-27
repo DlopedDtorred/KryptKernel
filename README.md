@@ -34,50 +34,41 @@
 ``` 
 ## 🧩 Kernel Modules
 
-    KryptHAL (Hardware Abstraction Layer): Low-level hardware control, chip metrics (frequency, cores, free RAM), system resets, and persistent storage management through NVS (Non-Volatile Storage).
+    MemoryManager: Internal heap and PSRAM allocation, metrics, and health checks.
 
-    KryptFS (FileSystem Driver): LittleFS-based storage driver with relative and absolute path resolution, safe deletion, and directory creation.
+    VFS (FileSystem Driver): LittleFS-based storage driver with mounting, file I/O, and safe deletion.
 
-    KryptTask (Task Manager): Asynchronous wrapper for spawning and managing independent tasks/processes on FreeRTOS.
+    TaskScheduler (Task Manager): Wrapper for spawning and managing independent FreeRTOS tasks.
 
-    KryptNet (Network Engine): Wi-Fi network stack and HTTP engine for outbound requests.
 
 ## 📁 Repository Structure
 ```Plaintext
 
 KryptKernel/
-├── Krypt.h           # Unified public Kernel interface
-├── KryptConfig.h     # Version definitions and global macros
-├── KryptHAL.h        # Hardware and NVS abstraction
-├── KryptFS.h         # LittleFS file system manager
-├── KryptTask.h       # FreeRTOS process scheduler
-├── KryptNet.h        # Network service and HTTP socket
+├── include/KryptKernel.h    # Unified public Kernel interface
+├── include/MemoryManager.h  # Heap and PSRAM manager
+├── include/VFS.h            # LittleFS file system manager
+├── include/TaskScheduler.h  # FreeRTOS task scheduler
 ├── library.json      # PlatformIO manifest
-├── library.properties# Arduino IDE manifest
 └── README.md
 ``` 
 ## 💻 Usage Example (Integration API)
 C++
 ```bash
 #include <Arduino.h>
-#include <Krypt.h>
+#include <KryptKernel.h>
 
 void setup() {
-  Serial.begin(115200);
-
-  // Initialize the Kernel
-  if (Krypt.boot()) {
+  if (Krypton::SystemKernel.boot()) {
     Serial.println("[Krypt] Kernel started successfully.");
   }
 
-  // Use KryptHAL
-  Serial.printf("Free RAM: %d KB\n", Krypt.hal.getFreeRAM() / 1024);
+  // Use the memory manager
+  Serial.printf("Free RAM: %u KB\n",
+                Krypton::SystemKernel.getMemoryManager().getMemorySnapshot().freeHeap / 1024);
 
-  // Use KryptFS
-  Krypt.fs.makeDirectory("/sys");
-
-  // Save persistent NVS data
-  Krypt.hal.setKeyString("system", "hostname", "krypt-node");
+  // Use the VFS
+  Krypton::SystemKernel.getVFS().writeFile("/sys/boot.log", "Kernel started");
 }
 
 void loop() {
@@ -88,3 +79,18 @@ void loop() {
 
 This project is distributed under the MIT License.
 
+## KryptonOS integration
+
+KryptonOS consumes this repository as the `KryptKernel` PlatformIO library.
+The kernel owns the global `Krypton::SystemKernel` instance and initializes
+the scheduler, memory manager, and LittleFS VFS during `boot()`.
+
+The VFS is mounted at `/sys`; paths passed to `Krypton::VFS` may be written
+as `/sys/file.txt` or `/file.txt`. File and directory operations are
+serialized with an internal FreeRTOS mutex so applications can share the VFS
+with the shell.
+
+KryptonOS creates its shell, web, and application tasks through
+`Krypton::TaskScheduler`. The scheduler priority names are `Low`, `Medium`,
+`Normal`, `High`, and `Critical` to avoid collisions with Arduino's `LOW` and
+`HIGH` macros.

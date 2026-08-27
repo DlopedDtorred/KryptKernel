@@ -1,6 +1,6 @@
 {
   "name": "KryptKernel",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "High-Performance Real-Time Microkernel and Task Scheduler for ESP32",
   "keywords": "esp32, kernel, rtos, rtos-wrapper, vfs, memory-manager, smp",
   "repository": {
