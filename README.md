@@ -1,6 +1,6 @@
 # ⚙️ Krypt Kernel
 
-> **Krypt** es un núcleo monolítico ligero, modular y portable diseñado sobre FreeRTOS y LittleFS para microcontroladores ESP32.
+> **Krypt** is a lightweight, modular, and portable monolithic kernel designed for ESP32 microcontrollers using FreeRTOS and LittleFS.
 
 ![Architecture](https://img.shields.io/badge/Type-Monolithic%20Kernel-blue)
 ![Platform](https://img.shields.io/badge/Platform-ESP32%20%2F%20FreeRTOS-green)
@@ -8,9 +8,9 @@
 
 ---
 
-## 🏛️ Arquitectura del Kernel
+## 🏛️ Kernel Architecture
 
-`Krypt` ofrece una capa de abstracción limpia entre el hardware de la ESP32 y cualquier sistema operativo o distribución de nivel superior (como *KryptonOS*).
+`Krypt` provides a clean abstraction layer between ESP32 hardware and any higher-level operating system or distribution (such as *KryptonOS*).
 
 ```text
 +-------------------------------------------------------+
@@ -32,31 +32,31 @@
 |                 Hardware / FreeRTOS                   |
 +-------------------------------------------------------+
 ``` 
-## 🧩 Módulos del Kernel
+## 🧩 Kernel Modules
 
-    KryptHAL (Hardware Abstraction Layer): Control de bajo nivel del hardware, lecturas del chip (frecuencia, cores, RAM libre), reinicios del sistema y gestión persistente mediante NVS (Non-Volatile Storage).
+    KryptHAL (Hardware Abstraction Layer): Low-level hardware control, chip metrics (frequency, cores, free RAM), system resets, and persistent storage management through NVS (Non-Volatile Storage).
 
-    KryptFS (FileSystem Driver): Driver de almacenamiento basado en LittleFS con resolución de rutas relativas y absolutas, borrado seguro y creación de directorios.
+    KryptFS (FileSystem Driver): LittleFS-based storage driver with relative and absolute path resolution, safe deletion, and directory creation.
 
-    KryptTask (Task Manager): Wrapper asíncrono para spawnear y gestionar tareas/procesos independientes sobre FreeRTOS.
+    KryptTask (Task Manager): Asynchronous wrapper for spawning and managing independent tasks/processes on FreeRTOS.
 
-    KryptNet (Network Engine): Pila de red WiFi y motor HTTP para peticiones salientes.
+    KryptNet (Network Engine): Wi-Fi network stack and HTTP engine for outbound requests.
 
-## 📁 Estructura del Repositorio
+## 📁 Repository Structure
 ```Plaintext
 
 KryptKernel/
-├── Krypt.h           # Interfaz pública unificada del Kernel
-├── KryptConfig.h     # Definiciones de versión y macros globales
-├── KryptHAL.h        # Abstracción de hardware y NVS
-├── KryptFS.h         # Gestor del sistema de archivos LittleFS
-├── KryptTask.h       # Scheduler de procesos FreeRTOS
-├── KryptNet.h        # Servicio de red y socket HTTP
-├── library.json      # Manifest para PlatformIO
-├── library.properties# Manifest para Arduino IDE
+├── Krypt.h           # Unified public Kernel interface
+├── KryptConfig.h     # Version definitions and global macros
+├── KryptHAL.h        # Hardware and NVS abstraction
+├── KryptFS.h         # LittleFS file system manager
+├── KryptTask.h       # FreeRTOS process scheduler
+├── KryptNet.h        # Network service and HTTP socket
+├── library.json      # PlatformIO manifest
+├── library.properties# Arduino IDE manifest
 └── README.md
 ``` 
-## 💻 Ejemplo de Uso (Integration API)
+## 💻 Usage Example (Integration API)
 C++
 ```bash
 #include <Arduino.h>
@@ -65,27 +65,26 @@ C++
 void setup() {
   Serial.begin(115200);
 
-  // Inicializar el Kernel
+  // Initialize the Kernel
   if (Krypt.boot()) {
-    Serial.println("[Krypt] Kernel iniciado correctamente.");
+    Serial.println("[Krypt] Kernel started successfully.");
   }
 
-  // Uso de KryptHAL
-  Serial.printf("RAM Libre: %d KB\n", Krypt.hal.getFreeRAM() / 1024);
+  // Use KryptHAL
+  Serial.printf("Free RAM: %d KB\n", Krypt.hal.getFreeRAM() / 1024);
 
-  // Uso de KryptFS
+  // Use KryptFS
   Krypt.fs.makeDirectory("/sys");
 
-  // Guardar datos persistentes NVS
+  // Save persistent NVS data
   Krypt.hal.setKeyString("system", "hostname", "krypt-node");
 }
 
 void loop() {
-  // El Kernel administra las tareas en background
+  // The Kernel manages background tasks
 }
 ``` 
-## 📜 Licencia
+## 📜 License
 
-Este proyecto se distribuye bajo la licencia MIT.
-
+This project is distributed under the MIT License.
 
