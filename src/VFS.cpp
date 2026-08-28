@@ -25,9 +25,16 @@ namespace Krypton {
     }
 
     bool VFS::mount(const char* path, bool formatOnFail) {
-        if (path == nullptr || path[0] == '\0') return false;
-        if (mounted) unmount();
+        if (path == nullptr || path[0] == '\0' ||
+            strlen(path) >= sizeof(mountPath)) {
+            Serial.println("[VFS] ERROR: Invalid or oversized mount path");
+            return false;
+        }
         if (lock != nullptr) xSemaphoreTake(lock, portMAX_DELAY);
+        if (mounted) {
+            LittleFS.end();
+            mounted = false;
+        }
         strncpy(mountPath, path, sizeof(mountPath) - 1);
         mountPath[sizeof(mountPath) - 1] = '\0';
         mounted = LittleFS.begin(formatOnFail, mountPath);
@@ -75,8 +82,12 @@ namespace Krypton {
     }
 
     String VFS::readFile(const char* filepath) {
-        if (!mounted || filepath == nullptr || !exists(filepath)) return "";
+        if (filepath == nullptr) return "";
         if (lock != nullptr) xSemaphoreTake(lock, portMAX_DELAY);
+        if (!mounted) {
+            if (lock != nullptr) xSemaphoreGive(lock);
+            return "";
+        }
         const String path = filesystemPath(filepath, mountPath);
         File f = LittleFS.open(path.c_str(), FILE_READ);
         if (!f) {
@@ -142,11 +153,17 @@ namespace Krypton {
     }
 
     size_t VFS::getTotalBytes() {
-        return mounted ? LittleFS.totalBytes() : 0;
+        if (lock != nullptr) xSemaphoreTake(lock, portMAX_DELAY);
+        const size_t total = mounted ? LittleFS.totalBytes() : 0;
+        if (lock != nullptr) xSemaphoreGive(lock);
+        return total;
     }
 
     size_t VFS::getUsedBytes() {
-        return mounted ? LittleFS.usedBytes() : 0;
+        if (lock != nullptr) xSemaphoreTake(lock, portMAX_DELAY);
+        const size_t used = mounted ? LittleFS.usedBytes() : 0;
+        if (lock != nullptr) xSemaphoreGive(lock);
+        return used;
     }
 
 } // namespace Krypton

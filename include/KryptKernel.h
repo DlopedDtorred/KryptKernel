@@ -6,7 +6,7 @@
 #include "MemoryManager.h"
 #include "VFS.h"
 
-#define KRYPT_KERNEL_VERSION "2.0.0-ENT"
+#define KRYPT_KERNEL_VERSION "2.0.1"
 
 namespace Krypton {
 

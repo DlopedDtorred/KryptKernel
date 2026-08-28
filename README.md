@@ -90,6 +90,11 @@ as `/sys/file.txt` or `/file.txt`. File and directory operations are
 serialized with an internal FreeRTOS mutex so applications can share the VFS
 with the shell.
 
+Mounting, unmounting, and capacity queries use the same lock, so filesystem
+diagnostics can safely run while an application task accesses the VFS.
+The public API and task priority names remain backward-compatible with
+KnotOS/KryptonOS integrations.
+
 KryptonOS creates its shell, web, and application tasks through
 `Krypton::TaskScheduler`. The scheduler priority names are `Low`, `Medium`,
 `Normal`, `High`, and `Critical` to avoid collisions with Arduino's `LOW` and
